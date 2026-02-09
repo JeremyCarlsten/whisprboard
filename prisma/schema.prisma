@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Product {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  createdAt DateTime   @default(now())
+  feedback  Feedback[]
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  title       String
+  body        String   @default("")
+  authorName  String   @default("Anonymous")
+  authorEmail String   @default("")
+  score       Int      @default(0)
+  status      String   @default("open")
+  createdAt   DateTime @default(now())
+  votes       Vote[]
+
+  @@index([productId])
+}
+
+model Vote {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  feedback    Feedback @relation(fields: [feedbackId], references: [id])
+  fingerprint String
+  value       Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  @@unique([feedbackId, fingerprint])
+  @@index([feedbackId])
+}
