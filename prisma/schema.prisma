@@ -24,7 +24,8 @@ model Feedback {
   authorName  String   @default("Anonymous")
   authorEmail String   @default("")
   score       Int      @default(0)
-  status      String   @default("open")
+  status      String   @default("New")
+  adminNote   String   @default("")
   createdAt   DateTime @default(now())
   votes       Vote[]
 

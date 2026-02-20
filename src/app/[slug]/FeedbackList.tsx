@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 
+const STATUS_COLORS: Record<string, string> = {
+  New: "bg-gray-100 text-gray-600",
+  "Under Review": "bg-blue-100 text-blue-700",
+  Planned: "bg-purple-100 text-purple-700",
+  "In Progress": "bg-yellow-100 text-yellow-800",
+  Done: "bg-green-100 text-green-700",
+  Declined: "bg-red-100 text-red-700",
+};
+
 type FeedbackItem = {
   id: string;
   title: string;
   body: string;
   authorName: string;
   score: number;
+  status: string;
   createdAt: string | Date;
   _count: { votes: number };
 };
@@ -73,7 +83,16 @@ function FeedbackCard({
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 flex gap-4">
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+          {item.status && item.status !== "New" && (
+            <span
+              className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[item.status] || ""}`}
+            >
+              {item.status}
+            </span>
+          )}
+        </div>
         {item.body && (
           <p className="text-sm text-gray-500 mt-1 line-clamp-2">{item.body}</p>
         )}
