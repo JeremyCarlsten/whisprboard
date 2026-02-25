@@ -21,7 +21,18 @@ Create a `.env` file:
 DATABASE_URL="file:./dev.db"
 ```
 
-For production (Vercel), you'll want to switch to a hosted database (e.g., Turso, PlanetScale, Neon) and update the adapter accordingly.
+For production (Vercel), you'll typically want to use a hosted database.
+
+### Turso / libSQL (recommended)
+
+Set these environment variables in Vercel (or your host):
+
+```bash
+TURSO_DATABASE_URL="libsql://..."
+TURSO_AUTH_TOKEN="<your-token>"
+```
+
+When both are present, Whisprboard will automatically use the Turso/libSQL adapter. Otherwise it falls back to the local SQLite file at `dev.db` via `better-sqlite3`.
 
 ## Tech Stack
 
