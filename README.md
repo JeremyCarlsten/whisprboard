@@ -23,14 +23,16 @@ Create a `.env` file:
 DATABASE_URL="file:./dev.db"
 ```
 
-### Production (Turso)
+### Production (Turso / libSQL)
 
-```
+Set these environment variables in Vercel (or your host):
+
+```bash
 TURSO_DATABASE_URL="libsql://your-db-name-your-org.turso.io"
 TURSO_AUTH_TOKEN="your-auth-token"
 ```
 
-When `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` are set, the app automatically uses Turso/libSQL instead of local SQLite.
+When both are present, Whisprboard automatically uses the Turso/libSQL adapter. Otherwise it falls back to local SQLite via `better-sqlite3`.
 
 ## Tech Stack
 

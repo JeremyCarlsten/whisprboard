@@ -4,7 +4,7 @@ import { prisma } from "../mocks/db";
 const mod = await import("../../src/app/api/feedback/[id]/vote/route");
 const POST = mod.POST;
 
-function makeRequest() {
+function makeRequest(): Request {
   return new Request("http://localhost/api/feedback/f1/vote", {
     method: "POST",
     headers: {
@@ -13,7 +13,7 @@ function makeRequest() {
       "user-agent": "test-agent",
     },
     body: JSON.stringify({}),
-  }) as any;
+  });
 }
 
 describe("POST /api/feedback/[id]/vote", () => {

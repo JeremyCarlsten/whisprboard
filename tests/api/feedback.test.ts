@@ -3,12 +3,12 @@ import { prisma } from "../mocks/db";
 
 const { POST } = await import("../../src/app/api/feedback/route");
 
-function makeRequest(body: unknown) {
+function makeRequest(body: unknown): Request {
   return new Request("http://localhost/api/feedback", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
-  }) as any;
+  });
 }
 
 describe("POST /api/feedback", () => {

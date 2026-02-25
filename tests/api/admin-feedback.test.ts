@@ -3,14 +3,14 @@ import { prisma } from "../mocks/db";
 
 const { PATCH } = await import("../../src/app/api/admin/feedback/route");
 
-function makeRequest(body: unknown, secret?: string) {
+function makeRequest(body: unknown, secret?: string): Request {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (secret) headers["x-admin-secret"] = secret;
   return new Request("http://localhost/api/admin/feedback", {
     method: "PATCH",
     headers,
     body: JSON.stringify(body),
-  }) as any;
+  });
 }
 
 describe("PATCH /api/admin/feedback", () => {
