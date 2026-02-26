@@ -28,6 +28,7 @@ model Feedback {
   adminNote   String   @default("")
   createdAt   DateTime @default(now())
   votes       Vote[]
+  comments    Comment[]
 
   @@index([productId])
 }
@@ -41,5 +42,17 @@ model Vote {
   createdAt   DateTime @default(now())
 
   @@unique([feedbackId, fingerprint])
+  @@index([feedbackId])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id])
+  body       String
+  authorName String   @default("Admin")
+  isAdmin    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
   @@index([feedbackId])
 }
