@@ -1,35 +1,41 @@
 name: CI
 
 on:
-  pull_request:
-    branches: [main, feat/admin-panel]
   push:
-    branches: [main, feat/admin-panel]
+    branches:
+      - main
+      - master
+      - chore/**
+      - feat/**
+  pull_request:
 
 jobs:
-  ci:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: true
 
       - name: Lint
         run: pnpm lint
 
-      - name: Test
+      - name: Run tests
         run: pnpm test
 
       - name: Build
-        run: pnpm build
         env:
-          DATABASE_URL: file:./dev.db
+          DATABASE_URL: "file:./dev.db"
+        run: pnpm build
