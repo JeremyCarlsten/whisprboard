@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 
 function getFingerprint(req: NextRequest): string {
   // Use a combination of IP + user agent as a simple fingerprint
