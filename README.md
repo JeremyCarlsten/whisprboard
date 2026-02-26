@@ -15,19 +15,28 @@ Then visit `http://localhost:3000/squadroll` to see the SquadRoll feedback board
 
 ## Environment Variables
 
+### Local development
+
 Create a `.env` file:
 
 ```
 DATABASE_URL="file:./dev.db"
 ```
 
-For production (Vercel), you'll want to switch to a hosted database (e.g., Turso, PlanetScale, Neon) and update the adapter accordingly.
+### Production (Turso)
+
+```
+TURSO_DATABASE_URL="libsql://your-db-name-your-org.turso.io"
+TURSO_AUTH_TOKEN="your-auth-token"
+```
+
+When `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` are set, the app automatically uses Turso/libSQL instead of local SQLite.
 
 ## Tech Stack
 
 - **Next.js 16** (App Router)
 - **Tailwind CSS 4**
-- **Prisma 7** with SQLite (via `@prisma/adapter-better-sqlite3`)
+- **Prisma 7** with SQLite (local) / Turso libSQL (production)
 - **TypeScript**
 
 ## Data Model
@@ -42,6 +51,7 @@ For production (Vercel), you'll want to switch to a hosted database (e.g., Turso
 |--------|-------|-------------|
 | `POST` | `/api/feedback` | Create a new suggestion |
 | `POST` | `/api/feedback/[id]/vote` | Upvote a suggestion |
+| `GET`  | `/api/health` | Health check + DB status |
 
 ### Create feedback
 
@@ -69,12 +79,27 @@ Add a row to the `Product` table with a unique `slug`. Then visit `/:slug` to se
 
 Link from your app to `https://whisprboard.com/<your-slug>` (or wherever you deploy this).
 
-## Deployment (Vercel)
+## Deployment (Vercel + Turso)
 
-1. Push to GitHub
-2. Import in Vercel
-3. Set `DATABASE_URL` env var (or switch to a hosted DB adapter)
-4. Deploy
+1. **Create a Turso database:**
+   ```bash
+   turso db create whisprboard
+   turso db tokens create whisprboard
+   ```
+2. **Push schema to Turso:**
+   ```bash
+   TURSO_DATABASE_URL="libsql://..." TURSO_AUTH_TOKEN="..." npx prisma migrate deploy
+   ```
+3. **Import in Vercel** — connect the GitHub repo
+4. **Set env vars** in Vercel project settings:
+   - `TURSO_DATABASE_URL` — your Turso database URL
+   - `TURSO_AUTH_TOKEN` — your Turso auth token
+5. **Deploy** — Vercel will auto-build on push
+6. **Seed** (optional): Run seed against Turso or add products via the admin API
+
+### Health check
+
+`GET /api/health` — returns DB connection status and product count.
 
 ## License
 
